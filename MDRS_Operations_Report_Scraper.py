@@ -6,23 +6,16 @@ import requests
 
 # Initialize data arrays and parameters
 pages = 53
-skip = 0
 
-(report_date, sol, writer, Non_Nom_Sys, Non_Nom_Notes,
- Generator, Solar, Diesel, Propane, Gasoline,
- Water_Loft, Water_Meter, Water_Tank, Pump_Use, Water_Greenhab, Water_Science, Toilet_Emptied,
- Perseverance, Sojourner, Spirit, Opportunity, Curiosity, Deimos, Rover_Notes,
- ATV_Use, HabCar, CrewCar,
- General_Notes, Internet_State, Suits_State, Obs_State, HS_State,
- HAB_Ops, Green_Ops, Science_Ops, RAM_Ops, Questions) = ([] for i in range(37))
+(report_date, sol, writer, Non_Nom_Sys, Non_Nom_Notes, Generator, Solar, Diesel, Propane, Gasoline, Water_Loft,
+ Water_Meter, Water_Tank, Pump_Use, Water_Greenhab, Water_Science, Toilet_Emptied, Perseverance, Sojourner, Spirit,
+ Opportunity, Curiosity, Deimos, Rover_Notes, ATV_Use, HabCar, CrewCar, General_Notes, Internet_State, Suits_State,
+ Obs_State, HS_State, HAB_Ops, Green_Ops, Science_Ops, RAM_Ops, Questions) = ([] for i in range(37))
 
-data = [report_date, sol, writer, Non_Nom_Sys, Non_Nom_Notes,
-        Generator, Solar, Diesel, Propane, Gasoline,
-        Water_Loft, Water_Meter, Water_Tank, Pump_Use, Water_Greenhab, Water_Science, Toilet_Emptied,
-        Perseverance, Sojourner, Spirit, Opportunity, Curiosity, Deimos, Rover_Notes,
-        ATV_Use, HabCar, CrewCar,
-        General_Notes, Internet_State, Suits_State, HAB_Ops, Green_Ops, Science_Ops, Obs_State, RAM_Ops, HS_State,
-        Questions]
+data = [report_date, sol, writer, Non_Nom_Sys, Non_Nom_Notes, Generator, Solar, Diesel, Propane, Gasoline,
+        Water_Loft, Water_Meter, Water_Tank, Pump_Use, Water_Greenhab, Water_Science, Toilet_Emptied, Perseverance,
+        Sojourner, Spirit, Opportunity, Curiosity, Deimos, Rover_Notes, ATV_Use, HabCar, CrewCar, General_Notes,
+        Internet_State, Suits_State, HAB_Ops, Green_Ops, Science_Ops, Obs_State, RAM_Ops, HS_State, Questions]
 
 srchtxt = ['Operations Report', 'SOL:', 'Name of', 'Non-nominal', 'Notes on non', 'Generator:', 'Solar', 'Diesel',
            'Propane', 'Ethanol', 'loft tank', 'Water Meter', 'static tank', 'static to loft pump', 'Water in GreenHab',
@@ -30,7 +23,6 @@ srchtxt = ['Operations Report', 'SOL:', 'Name of', 'Non-nominal', 'Notes on non'
            'Deimos', 'Notes on rovers', ['ATVs', 'ATV’s'], 'HabCar', 'CrewCar', 'General notes', 'internet',
            'suits and radios', 'Summary of Hab', 'Summary of GreenHab', 'Summary of ScienceDome', 'Summary of any',
            'Summary of RAM', 'Summary of health', 'Questions']
-
 
 def tstrp(txtstr, *args):
     # This function will remove the first instance of each supplied *args string as well as any non-alphanumeric
@@ -44,7 +36,6 @@ def tstrp(txtstr, *args):
     for spltstr in args:
         result = re.sub(spltstr, '', result, 1, flags=re.I)
     return result.strip()
-
 
 def datxt(darr, dsoup, txtstr):
     # This function searches for the first instance of any strings in *args in a soup entry
@@ -60,7 +51,6 @@ def datxt(darr, dsoup, txtstr):
             break
     return
 
-
 # Data scraping loop
 for pagenumber in range(pages):
     print('Scraping page ' + str(pagenumber) + '...')
@@ -72,10 +62,12 @@ for pagenumber in range(pages):
         if not entry.find_all('pre'):
             for t, col in enumerate(data):
                 datxt(col, entry, srchtxt[t])
-            # extract crew, date
+            # extract crew, date from report header?
             # missing: hours run, from what time last night to what time this morning, any additional daytime hours
             # missing hours, beginning charge, ending charge, and currently charging
-            # missing reason for us, oil added?, fuel use, hours of use, other notes
+            # all of these should be sibling tags in the soup
+            # locate each rover's tag then proceed down siblings
+            # missing reason for use, oil added?, fuel use, hours of use, other notes
         else:
             # for those entries which are just one large block of text, we forget them and just append a space.
             for col in data:
@@ -138,5 +130,4 @@ df = pd.DataFrame({'Report Date': report_date, 'Sol': sol, 'Writer': writer, 'No
                    'HAB Notes': HAB_Ops, 'GreenHab Notes': Green_Ops, 'ScienceDome Notes': Science_Ops,
                    'RAM Notes': RAM_Ops, 'Questions': Questions})
 
-df.to_csv('MDRS.csv', index=False, encoding='utf-8')
-print(skip)
+df.to_csv('MDRS_Operations.csv', index=False, encoding='utf-8')
