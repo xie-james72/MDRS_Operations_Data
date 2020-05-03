@@ -159,6 +159,8 @@ df = pd.DataFrame({'Report Date': data[0], 'Sol': data[1], 'Writer': data[2], 'N
                    'Water: Loft Tank (gal)': data[10], 'Water: Meter (units)': data[11],
                    'Water: Static Tank (gal)': data[12], 'Pump Use': data[13], 'Water in GreenHab (gal)': data[14],
                    'Water in ScienceDome (gal)': data[15], 'Toilet Emptied?': data[16], 'Perseverance': data[17],
+                   'P_Hours': Perseverance_data.hours, 'P_Charge_Start': Perseverance_data.charge_start,
+                   'P_Charge_End': Perseverance_data.charge_end, 'P_Charge_Status': Perseverance_data.charge_status,
                    'Sojourner': data[18], 'So_Hours': Sojourner_data.hours,
                    'So_Charge_Start': Sojourner_data.charge_start, 'So_Charge_End': Sojourner_data.charge_end,
                    'So_Charge_Status': Sojourner_data.charge_status, 'Spirit': data[19], 'Sp_Hours': Spirit_data.hours,
